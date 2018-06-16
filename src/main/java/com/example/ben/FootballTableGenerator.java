@@ -43,8 +43,17 @@ class FootballTableGenerator {
     private void printTable(List<TeamResult> teamResults) {
         int pos = 1;
         for (TeamResult tr : teamResults) {
-            System.out.println(pos++ + ". " + tr.getName() + " " + tr.getScore() + " pts");
+            System.out.println(pos++ + ". " + tr.getName() + " " + getScoreString(tr));
         }
+    }
+
+    private String getScoreString(TeamResult tr) {
+        String scoreString;
+
+        if (tr.getScore() > 1) scoreString = tr.getScore() + " pts";
+        else scoreString = tr.getScore() + " pt";
+
+        return scoreString;
     }
 
     void createTableAndPrint(List<String> scoreList) {

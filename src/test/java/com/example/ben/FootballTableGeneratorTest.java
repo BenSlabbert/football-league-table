@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -21,12 +22,27 @@ public class FootballTableGeneratorTest {
     }
 
     @Test
-    public void readFromFileTest() throws IOException {
+    public void readFromFileTest_1() throws IOException {
 
-        List<String> strings = Files.readAllLines(Paths.get("/home/ben/ideaProjects/football-table/src/test/resources/test.csv"));
+        List<String> strings = Files.readAllLines(Paths.get("src/test/resources/test-1.csv"));
         assertNotNull(strings);
 
         assertEquals(5, strings.size());
+
+        generator.createTableAndPrint(strings);
+    }
+
+    @Test
+    public void readFromFileTest_2() throws IOException {
+
+        List<String> strings = Files.readAllLines(Paths.get("src/test/resources/test-2.csv"))
+                .stream()
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        assertNotNull(strings);
+
+        assertEquals(7, strings.size());
 
         generator.createTableAndPrint(strings);
     }

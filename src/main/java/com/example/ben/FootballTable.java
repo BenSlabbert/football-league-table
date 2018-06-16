@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import static java.lang.System.out;
 
@@ -39,7 +40,7 @@ public class FootballTable {
 
             if (input.hasNextLine())
                 userInput = input.nextLine().replaceAll("  ", " ");
-            else userInput = "q";
+            else userInput = "t";
         }
 
         if ("t".equals(userInput) && !scoreList.isEmpty()) generator.createTableAndPrint(scoreList);
@@ -48,11 +49,10 @@ public class FootballTable {
     }
 
     private static void handleFile(String path, FootballTableGenerator generator) {
-        // try to read from file
         out.println("Path to file: " + path);
 
         try {
-            List<String> strings = Files.readAllLines(Paths.get(path));
+            List<String> strings = readFile(path);
             boolean b = generator.validateLines(strings);
 
             if (!b) out.println("Invalid line in file!");
@@ -61,5 +61,12 @@ public class FootballTable {
         } catch (IOException e) {
             out.println("File not found!");
         }
+    }
+
+    private static List<String> readFile(String path) throws IOException {
+        List<String> strings = Files.readAllLines(Paths.get(path));
+        return strings.stream()
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
     }
 }
