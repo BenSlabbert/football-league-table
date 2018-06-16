@@ -14,20 +14,19 @@ public class FootballTable {
 
     public static void main(String[] args) {
 
-        FootballTableGenerator generator = new FootballTableGenerator();
-
         if (args.length > 1) out.println("Too many arguments provided!");
-        else if (args.length == 1 && !args[0].isEmpty()) handleFile(args[0], generator);
-        else handleCommandLine(generator);
+        else if (args.length == 1 && !args[0].isEmpty()) handleFile(args[0]);
+        else handleCommandLine();
     }
 
-    private static void handleCommandLine(FootballTableGenerator generator) {
+    private static void handleCommandLine() {
         out.println("Please add results for the league. Type 'q' to exit.");
         out.println("Type 'q' to exit.");
         out.println("Type 't' to see table.");
 
-        String userInput;
+        FootballTableGenerator generator = new FootballTableGenerator();
         List<String> scoreList = new ArrayList<>();
+        String userInput;
 
         Scanner input = new Scanner(System.in);
 
@@ -48,16 +47,14 @@ public class FootballTable {
         out.println("Done");
     }
 
-    private static void handleFile(String path, FootballTableGenerator generator) {
-        out.println("Path to file: " + path);
+    private static void handleFile(String path) {
+        FootballTableGenerator generator = new FootballTableGenerator();
 
         try {
             List<String> strings = readFile(path);
-            boolean b = generator.validateLines(strings);
 
-            if (!b) out.println("Invalid line in file!");
-
-            generator.createTableAndPrint(strings);
+            if (!generator.isValidFile(strings)) out.println("Invalid file!");
+            else generator.createTableAndPrint(strings);
         } catch (IOException e) {
             out.println("File not found!");
         }

@@ -1,10 +1,13 @@
 package com.example.ben;
 
+import mockit.Mock;
+import mockit.MockUp;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.ByteArrayInputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -62,5 +65,31 @@ public class FootballTableTest {
         assertNotNull(fileLines);
         assertFalse(fileLines.isEmpty());
         assertEquals(7, fileLines.size());
+    }
+
+    @Test
+    public void handleFileTest_fileNotFound(){
+
+        new MockUp<PrintStream>(){
+          @Mock
+          public void println(String x) {
+              assertEquals("File not found!", x);
+          }
+        };
+
+        ReflectionTestUtils.invokeMethod(footballTable, "handleFile", "");
+    }
+
+    @Test
+    public void handleFileTest_invalidFile(){
+
+        new MockUp<PrintStream>(){
+          @Mock
+          public void println(String x) {
+              assertEquals("Invalid file!", x);
+          }
+        };
+
+        ReflectionTestUtils.invokeMethod(footballTable, "handleFile", "src/test/resources/invalid-file.csv");
     }
 }

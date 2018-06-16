@@ -34,7 +34,7 @@ class FootballTableGenerator {
             int c;
             c = o2.getScore().compareTo(o1.getScore());
 
-            if (c == 0) c = o1.getName().compareTo(o2.getName());
+            if (c == 0) c = o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
 
             return c;
         });
@@ -91,7 +91,7 @@ class FootballTableGenerator {
         }
     }
 
-    boolean validateLines(List<String> lines) {
+    boolean isValidFile(List<String> lines) {
 
         for (String line : lines) {
             if (!isValidLine(line)) {
