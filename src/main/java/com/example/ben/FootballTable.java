@@ -42,8 +42,6 @@ public class FootballTable {
 
         if (scoreList.isEmpty()) out.println("No results provided!");
         else if ("t".equals(userInput)) generator.createTableAndPrint(scoreList);
-
-        out.println("Done");
     }
 
     private static void printInstructions() {

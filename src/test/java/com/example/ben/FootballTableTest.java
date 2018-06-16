@@ -49,7 +49,7 @@ public class FootballTableTest {
             @Mock
             public void println(String x) {
 
-                if (!x.equals("No results provided!") && !x.equals("Done")) {
+                if (!x.equals("No results provided!")) {
                     fail();
                 }
             }
