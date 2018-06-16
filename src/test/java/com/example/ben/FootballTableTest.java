@@ -24,12 +24,38 @@ public class FootballTableTest {
     }
 
     @Test
-    public void testMainRuns() {
+    public void testMainRuns_goodInputs() {
         ByteArrayInputStream in = new ByteArrayInputStream(("Lions 3, Snakes 3\n" +
                 "Tarantulas 1, FC Awesome 0\n" +
                 "Lions 1, FC Awesome 1\n" +
                 "Tarantulas 3, Snakes 1\n" +
                 "Lions 4, Grouches 0\n").getBytes());
+        System.setIn(in);
+
+        footballTable.main(new String[]{});
+    }
+
+    @Test
+    public void testMainRuns_emptyInputs() {
+
+        new MockUp<FootballTable>() {
+            @Mock
+            private void printInstructions() {
+                // ignore
+            }
+        };
+
+        new MockUp<PrintStream>() {
+            @Mock
+            public void println(String x) {
+
+                if (!x.equals("No results provided!") && !x.equals("Done")) {
+                    fail();
+                }
+            }
+        };
+
+        ByteArrayInputStream in = new ByteArrayInputStream("t".getBytes());
         System.setIn(in);
 
         footballTable.main(new String[]{});
@@ -68,26 +94,26 @@ public class FootballTableTest {
     }
 
     @Test
-    public void handleFileTest_fileNotFound(){
+    public void handleFileTest_fileNotFound() {
 
-        new MockUp<PrintStream>(){
-          @Mock
-          public void println(String x) {
-              assertEquals("File not found!", x);
-          }
+        new MockUp<PrintStream>() {
+            @Mock
+            public void println(String x) {
+                assertEquals("File not found!", x);
+            }
         };
 
         ReflectionTestUtils.invokeMethod(footballTable, "handleFile", "");
     }
 
     @Test
-    public void handleFileTest_invalidFile(){
+    public void handleFileTest_invalidFile() {
 
-        new MockUp<PrintStream>(){
-          @Mock
-          public void println(String x) {
-              assertEquals("Invalid file!", x);
-          }
+        new MockUp<PrintStream>() {
+            @Mock
+            public void println(String x) {
+                assertEquals("Invalid file!", x);
+            }
         };
 
         ReflectionTestUtils.invokeMethod(footballTable, "handleFile", "src/test/resources/invalid-file.csv");

@@ -1,10 +1,13 @@
 package com.example.ben;
 
+import mockit.Mock;
+import mockit.MockUp;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -212,5 +215,32 @@ public class FootballTableGeneratorTest {
         assertEquals(1, tr1.getScore().intValue());
         assertEquals("bbb", tr2.getName());
         assertEquals(1, tr2.getScore().intValue());
+    }
+
+    @Test
+    public void printTableTest(){
+
+        new MockUp<PrintStream>(){
+            @Mock
+            public void println(String x) {
+
+                if(x.startsWith("1.")){
+                    assertEquals("1. aaa 1 pt", x);
+                } else if (x.startsWith("2.")){
+                    assertEquals("2. bbb 2 pts", x);
+                } else {
+                    fail("Must begin with '1.' or '2.'");
+                }
+            }
+        };
+
+        List<TeamResult> teamResults = new ArrayList<>();
+
+        TeamResult tr = new TeamResult("aaa", 1);
+        teamResults.add(tr);
+        tr = new TeamResult("bbb", 2);
+        teamResults.add(tr);
+
+        ReflectionTestUtils.invokeMethod(generator, "printTable", teamResults);
     }
 }

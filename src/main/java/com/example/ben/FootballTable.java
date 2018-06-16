@@ -20,9 +20,7 @@ public class FootballTable {
     }
 
     private static void handleCommandLine() {
-        out.println("Please add results for the league. Type 'q' to exit.");
-        out.println("Type 'q' to exit.");
-        out.println("Type 't' to see table.");
+        printInstructions();
 
         FootballTableGenerator generator = new FootballTableGenerator();
         List<String> scoreList = new ArrayList<>();
@@ -34,7 +32,7 @@ public class FootballTable {
 
         while (!"q".equals(userInput) && !"t".equals(userInput)) {
 
-            if (!generator.isValidLine(userInput)) out.println("invalid score: " + userInput);
+            if (!generator.isValidLine(userInput)) out.println("Invalid score: " + userInput);
             else scoreList.add(userInput);
 
             if (input.hasNextLine())
@@ -42,9 +40,16 @@ public class FootballTable {
             else userInput = "t";
         }
 
-        if ("t".equals(userInput) && !scoreList.isEmpty()) generator.createTableAndPrint(scoreList);
+        if (scoreList.isEmpty()) out.println("No results provided!");
+        else if ("t".equals(userInput)) generator.createTableAndPrint(scoreList);
 
         out.println("Done");
+    }
+
+    private static void printInstructions() {
+        out.println("Please add results for the league. Type 'q' to exit.");
+        out.println("Type 'q' to exit.");
+        out.println("Type 't' to see table.");
     }
 
     private static void handleFile(String path) {
