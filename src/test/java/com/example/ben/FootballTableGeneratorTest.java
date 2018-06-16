@@ -7,6 +7,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -147,4 +148,69 @@ public class FootballTableGeneratorTest {
         assertTrue(isValid);
     }
 
+    @Test
+    public void sortResultsTest_scoresDiffer(){
+
+        List<TeamResult> teamResults = new ArrayList<>();
+
+        TeamResult tr = new TeamResult("aaa", 1);
+        teamResults.add(tr);
+        tr = new TeamResult("AAA", 2);
+        teamResults.add(tr);
+
+        ReflectionTestUtils.invokeMethod(generator, "sortResults", teamResults);
+
+        assertEquals(2, teamResults.size());
+        TeamResult tr1 = teamResults.get(0);
+        TeamResult tr2 = teamResults.get(1);
+
+        assertEquals("AAA", tr1.getName());
+        assertEquals(2, tr1.getScore().intValue());
+        assertEquals("aaa", tr2.getName());
+        assertEquals(1, tr2.getScore().intValue());
+    }
+
+    @Test
+    public void sortResultsTest_scoresSame(){
+
+        List<TeamResult> teamResults = new ArrayList<>();
+
+        TeamResult tr = new TeamResult("aaa", 1);
+        teamResults.add(tr);
+        tr = new TeamResult("AAA", 1);
+        teamResults.add(tr);
+
+        ReflectionTestUtils.invokeMethod(generator, "sortResults", teamResults);
+
+        assertEquals(2, teamResults.size());
+        TeamResult tr1 = teamResults.get(0);
+        TeamResult tr2 = teamResults.get(1);
+
+        assertEquals("aaa", tr1.getName());
+        assertEquals(1, tr1.getScore().intValue());
+        assertEquals("AAA", tr2.getName());
+        assertEquals(1, tr2.getScore().intValue());
+    }
+
+    @Test
+    public void sortResultsTest_scoresSame_differentName(){
+
+        List<TeamResult> teamResults = new ArrayList<>();
+
+        TeamResult tr = new TeamResult("bbb", 1);
+        teamResults.add(tr);
+        tr = new TeamResult("aaa", 1);
+        teamResults.add(tr);
+
+        ReflectionTestUtils.invokeMethod(generator, "sortResults", teamResults);
+
+        assertEquals(2, teamResults.size());
+        TeamResult tr1 = teamResults.get(0);
+        TeamResult tr2 = teamResults.get(1);
+
+        assertEquals("aaa", tr1.getName());
+        assertEquals(1, tr1.getScore().intValue());
+        assertEquals("bbb", tr2.getName());
+        assertEquals(1, tr2.getScore().intValue());
+    }
 }
