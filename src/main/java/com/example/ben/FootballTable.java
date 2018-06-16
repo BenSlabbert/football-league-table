@@ -25,7 +25,9 @@ public class FootballTable {
             if (!ft.isValidLine(userInput)) System.out.println("invalid score: " + userInput);
             else scoreList.add(userInput);
 
-            userInput = input.nextLine().replaceAll("  ", " ");
+            if (input.hasNextLine())
+                userInput = input.nextLine().replaceAll("  ", " ");
+            else userInput = "q";
         }
 
         if ("t".equals(userInput) && !scoreList.isEmpty()) ft.createTableAndPrint(scoreList);
