@@ -7,14 +7,7 @@ import java.util.Map;
 
 class FootballTableGenerator {
 
-    private static void printTable(List<TeamResult> teamResults) {
-        int pos = 1;
-        for (TeamResult tr : teamResults) {
-            System.out.println(pos++ + ". " + tr.getName() + " " + tr.getScore() + " pts");
-        }
-    }
-
-    private static List<TeamResult> getSortedTeamResults(Map<String, Integer> table) {
+    private List<TeamResult> getSortedTeamResults(Map<String, Integer> table) {
         List<TeamResult> teamResults = new ArrayList<>();
         for (Map.Entry<String, Integer> key : table.entrySet())
             teamResults.add(new TeamResult(key.getKey(), key.getValue() == null ? 0 : key.getValue()));
@@ -24,7 +17,18 @@ class FootballTableGenerator {
         return teamResults;
     }
 
-    private static void sortResults(List<TeamResult> teamResults) {
+    private TeamResult getTeam(String string) {
+        string = string.trim();
+        int beginIndex = string.lastIndexOf(" ");
+        String teamName = string.substring(0, beginIndex);
+        String score = string.substring(beginIndex + 1);
+
+        Integer homeTeamScore = Integer.valueOf(score);
+
+        return new TeamResult(teamName, homeTeamScore);
+    }
+
+    private void sortResults(List<TeamResult> teamResults) {
         teamResults.sort((o1, o2) -> {
 
             int c;
@@ -36,15 +40,11 @@ class FootballTableGenerator {
         });
     }
 
-    private static TeamResult getTeam(String string) {
-        string = string.trim();
-        int beginIndex = string.lastIndexOf(" ");
-        String teamName = string.substring(0, beginIndex);
-        String score = string.substring(beginIndex + 1);
-
-        Integer homeTeamScore = Integer.valueOf(score);
-
-        return new TeamResult(teamName, homeTeamScore);
+    private void printTable(List<TeamResult> teamResults) {
+        int pos = 1;
+        for (TeamResult tr : teamResults) {
+            System.out.println(pos++ + ". " + tr.getName() + " " + tr.getScore() + " pts");
+        }
     }
 
     void createTableAndPrint(List<String> scoreList) {
@@ -80,6 +80,16 @@ class FootballTableGenerator {
             score = table.get(awayTeamResult.getName());
             table.put(awayTeamResult.getName(), ++score);
         }
+    }
+
+    boolean validateLines(List<String> lines) {
+
+        for (String line : lines) {
+            if (!isValidLine(line)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     boolean isValidLine(String line) {
